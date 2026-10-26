@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Encoding and Feature Scaling Assignments</title>
+<style>
+:root{--bg:#f7f8fc;--card:#fff;--tx:#1b1f3a;--mu:#5b6082;--ac:#4f46e5;--bd:#dfe2f0;--code:#12142b;--cf:#e8eaff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1020;--card:#171a33;--tx:#eceefc;--mu:#a3a8cc;--ac:#8b85ff;--bd:#2a2e55;--code:#0a0b18;--cf:#d6d9ff}}
+:root[data-theme="dark"]{--bg:#0e1020;--card:#171a33;--tx:#eceefc;--mu:#a3a8cc;--ac:#8b85ff;--bd:#2a2e55;--code:#0a0b18;--cf:#d6d9ff}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--tx);font:19px/1.6 system-ui,Segoe UI,Roboto,sans-serif}
+nav{position:sticky;top:env(safe-area-inset-top,0px);background:var(--card);border-bottom:1px solid var(--bd);display:flex;gap:6px;overflow-x:auto;padding:10px 14px;z-index:5}
+nav a{white-space:nowrap;color:var(--ac);text-decoration:none;font-weight:700;font-size:16px;padding:6px 12px;border-radius:20px}nav a:hover{background:var(--bd)}
+main{max-width:980px;margin:auto;padding:20px 16px 60px}
+h1{font-size:40px;margin:26px 0 4px}h2{font-size:32px;margin:44px 0 12px;border-left:8px solid var(--ac);padding-left:14px}
+.sub{color:var(--mu);font-size:21px}
+.box{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:18px 22px;margin:16px 0}
+.tag{display:inline-block;background:var(--ac);color:#fff;border-radius:20px;padding:2px 14px;font-size:15px;font-weight:700}
+h3{margin:8px 0;font-size:25px}
+.task{background:var(--bd);border-left:6px solid var(--ac);padding:8px 14px;border-radius:8px;margin:10px 0}
+table{border-collapse:collapse;font-size:16px;margin:8px 0;display:block;overflow-x:auto}th,td{border:1px solid var(--bd);padding:5px 12px;text-align:left}th{background:var(--bd)}
+pre{background:var(--code);color:var(--cf);padding:14px;border-radius:12px;overflow-x:auto;font:16px/1.55 ui-monospace,Consolas,monospace;margin:10px 0;display:none}pre.show{display:block}
+button{background:var(--ac);color:#fff;border:0;border-radius:10px;padding:9px 16px;font-size:16px;font-weight:700;cursor:pointer;margin:6px 8px 0 0}
+button.alt{background:transparent;color:var(--ac);border:2px solid var(--ac)}
+</style></head><body>
+<nav><a href="#enc">Encoding (5)</a><a href="#sc">Feature Scaling (5)</a></nav>
+<main>
+<h1>Encoding &amp; Feature Scaling: Assignments</h1>
+<p class="sub">10 practice assignments with CSV files</p>
+<div class="box"><b>How to do each assignment</b><ol>
+<li>Press <b>Download CSV</b> and save the file in the same folder as your Python notebook.</li>
+<li>Read the scenario and do the <b>one task</b> given.</li>
+<li>Try it yourself first. Then press <b>Show Solution</b> to check.</li></ol></div>
+<h2 id="enc">Part 1: Encoding</h2><div id="encList"></div>
+<h2 id="sc">Part 2: Feature Scaling</h2><div id="scList"></div>
+</main>
+<script>
+const A=[
+// ---------- ENCODING ----------
+{g:"enc",t:"Label Encoding the Target",f:"customers.csv",
+s:"A telecom company wants to predict which customers will leave. The Churn column has text values Yes and No.",
+k:"Convert the Churn column into numbers using LabelEncoder and save it in a new column Churn_enc.",
+c:`Customer,Age,Plan,Churn
+C101,25,Basic,Yes
+C102,32,Premium,No
+C103,41,Basic,No
+C104,29,Standard,Yes
+C105,35,Premium,No
+C106,52,Standard,No
+C107,23,Basic,Yes
+C108,47,Premium,No`,
+p:`# import pandas to read the csv file
+import pandas as pd
+# import LabelEncoder from sklearn
+from sklearn.preprocessing import LabelEncoder
+# read the csv file
+df = pd.read_csv("customers.csv")
+# create the encoder object
+le = LabelEncoder()
+# convert the Churn column into numbers
+df["Churn_enc"] = le.fit_transform(df["Churn"])
+# print the result
+print(df)`},
+{g:"enc",t:"Ordinal Encoding",f:"tshirts.csv",
+s:"An online store sells T-shirts. The Size column has a natural order: Small, then Medium, then Large.",
+k:"Convert the Size column using OrdinalEncoder (Small = 0, Medium = 1, Large = 2) and save it in a new column Size_enc.",
+c:`Order_ID,Brand,Size,Price
+T1,Nike,Small,999
+T2,Puma,Large,1499
+T3,Nike,Medium,1199
+T4,Adidas,Small,899
+T5,Puma,Medium,1299
+T6,Adidas,Large,1599
+T7,Nike,Large,1399
+T8,Puma,Small,799`,
+p:`# import pandas to read the csv file
+import pandas as pd
+# import OrdinalEncoder from sklearn
+from sklearn.preprocessing import OrdinalEncoder
+# read the csv file
+df = pd.read_csv("tshirts.csv")
+# create the encoder and give the correct order
+oe = OrdinalEncoder(categories=[["Small", "Medium", "Large"]])
+# convert the Size column into numbers
+df["Size_enc"] = oe.fit_transform(df[["Size"]])
+# print the result
+print(df)`},
+{g:"enc",t:"One-Hot Encoding",f:"deliveries.csv",
+s:"A food delivery app wants to predict delivery time. The City column has no order, so one city is not bigger than another.",
+k:"Convert the City column using OneHotEncoder with drop=\"first\" and show the result as a DataFrame.",
+c:`Order_ID,City,Amount
+D1,Pune,450
+D2,Mumbai,620
+D3,Delhi,380
+D4,Pune,510
+D5,Delhi,290
+D6,Mumbai,700
+D7,Pune,330
+D8,Delhi,410`,
+p:`# import pandas to read the csv file
+import pandas as pd
+# import OneHotEncoder from sklearn
+from sklearn.preprocessing import OneHotEncoder
+# read the csv file
+df = pd.read_csv("deliveries.csv")
+# create the encoder and drop the first column
+ohe = OneHotEncoder(drop="first", sparse_output=False)
+# convert the City column into 0 and 1 columns
+arr = ohe.fit_transform(df[["City"]])
+# get the new column names
+names = ohe.get_feature_names_out()
+# put the result in a DataFrame
+encoded = pd.DataFrame(arr, columns=names)
+# print the result
+print(encoded)`},
+{g:"enc",t:"One-Hot with get_dummies",f:"payments.csv",
+s:"A payment app studies its transactions. The Payment_Mode column has three values: UPI, Card and Cash.",
+k:"Use pd.get_dummies with drop_first=True to encode the Payment_Mode column.",
+c:`Txn_ID,Payment_Mode,Amount
+P1,UPI,250
+P2,Card,1200
+P3,Cash,300
+P4,UPI,780
+P5,Card,560
+P6,UPI,90
+P7,Cash,430
+P8,Card,2100`,
+p:`# import pandas to read the csv file
+import pandas as pd
+# read the csv file
+df = pd.read_csv("payments.csv")
+# encode Payment_Mode and drop the first column
+df2 = pd.get_dummies(df, columns=["Payment_Mode"], drop_first=True, dtype=int)
+# print the result
+print(df2)`},
+{g:"enc",t:"Frequency Encoding",f:"shops.csv",
+s:"A retail chain has shops in many areas of a city. Making one column for every area would create too many columns.",
+k:"Replace each Area with the number of times it appears in the data and save it in a new column Area_freq.",
+c:`Shop_ID,Area,Sales
+S1,Kothrud,52000
+S2,Baner,61000
+S3,Kothrud,48000
+S4,Wakad,39000
+S5,Kothrud,55000
+S6,Baner,58000
+S7,Hadapsar,34000
+S8,Wakad,41000`,
+p:`# import pandas to read the csv file
+import pandas as pd
+# read the csv file
+df = pd.read_csv("shops.csv")
+# count how many times each area appears
+freq = df["Area"].value_counts()
+# replace each area with its count
+df["Area_freq"] = df["Area"].map(freq)
+# print the result
+print(df)`},
+// ---------- SCALING ----------
+{g:"sc",t:"Min-Max Scaling",f:"employees.csv",
+s:"An HR team wants to group employees using a clustering model. Age is between 20 and 60, but Salary is in thousands.",
+k:"Scale the Age and Salary columns using MinMaxScaler and print the result.",
+c:`Emp_ID,Age,Salary
+E1,22,25000
+E2,28,40000
+E3,35,60000
+E4,41,85000
+E5,50,120000
+E6,30,45000`,
+p:`# import pandas to read the csv file
+import pandas as pd
+# import MinMaxScaler from sklearn
+from sklearn.preprocessing import MinMaxScaler
+# read the csv file
+df = pd.read_csv("employees.csv")
+# select the two columns to scale
+X = df[["Age", "Salary"]]
+# create the scaler object
+scaler = MinMaxScaler()
+# scale the columns
+scaled = scaler.fit_transform(X)
+# put the result in a DataFrame
+out = pd.DataFrame(scaled, columns=X.columns)
+# print the result rounded to 2 decimals
+print(out.round(2))`},
+{g:"sc",t:"Standardization",f:"houses.csv",
+s:"A real-estate company wants to predict house prices using KNN. Area_sqft is in hundreds, but Bedrooms is only 1 to 4.",
+k:"Scale the Area_sqft and Bedrooms columns using StandardScaler and print the result.",
+c:`House_ID,Area_sqft,Bedrooms,Price_Lakh
+H1,650,1,35
+H2,900,2,52
+H3,1200,3,78
+H4,1500,3,95
+H5,1800,4,130
+H6,750,2,44`,
+p:`# import pandas to read the csv file
+import pandas as pd
+# import StandardScaler from sklearn
+from sklearn.preprocessing import StandardScaler
+# read the csv file
+df = pd.read_csv("houses.csv")
+# select the two columns to scale
+X = df[["Area_sqft", "Bedrooms"]]
+# create the scaler object
+scaler = StandardScaler()
+# scale the columns
+scaled = scaler.fit_transform(X)
+# put the result in a DataFrame
+out = pd.DataFrame(scaled, columns=X.columns)
+# print the result rounded to 2 decimals
+print(out.round(2))`},
+{g:"sc",t:"Robust Scaling (Outliers)",f:"salaries.csv",
+s:"A company has one owner whose salary is far bigger than all other employees. This extreme value is an outlier.",
+k:"Scale the Experience and Salary columns using RobustScaler and print the result.",
+c:`Emp_ID,Experience,Salary
+E1,1,25000
+E2,2,30000
+E3,3,35000
+E4,5,42000
+E5,6,48000
+E6,10,900000`,
+p:`# import pandas to read the csv file
+import pandas as pd
+# import RobustScaler from sklearn
+from sklearn.preprocessing import RobustScaler
+# read the csv file
+df = pd.read_csv("salaries.csv")
+# select the two columns to scale
+X = df[["Experience", "Salary"]]
+# create the scaler object
+scaler = RobustScaler()
+# scale the columns
+scaled = scaler.fit_transform(X)
+# put the result in a DataFrame
+out = pd.DataFrame(scaled, columns=X.columns)
+# print the result rounded to 2 decimals
+print(out.round(2))`},
+{g:"sc",t:"Fit on Train, Transform on Test",f:"students.csv",
+s:"A coaching class wants to predict if a student will pass. The model must not see any test data while scaling.",
+k:"Split the data into train and test (25% test), fit StandardScaler on the train data only, and transform both train and test.",
+c:`Student_ID,Study_Hours,Previous_Marks,Result
+S1,2,45,Fail
+S2,5,70,Pass
+S3,8,88,Pass
+S4,1,35,Fail
+S5,6,76,Pass
+S6,3,52,Fail
+S7,7,81,Pass
+S8,4,60,Pass`,
+p:`# import pandas to read the csv file
+import pandas as pd
+# import train_test_split to split the data
+from sklearn.model_selection import train_test_split
+# import StandardScaler from sklearn
+from sklearn.preprocessing import StandardScaler
+# read the csv file
+df = pd.read_csv("students.csv")
+# select the input columns
+X = df[["Study_Hours", "Previous_Marks"]]
+# split into train and test data
+X_train, X_test = train_test_split(X, test_size=0.25, random_state=1)
+# create the scaler object
+scaler = StandardScaler()
+# learn and scale the train data
+X_train_s = scaler.fit_transform(X_train)
+# only scale the test data (no fit)
+X_test_s = scaler.transform(X_test)
+# print the scaled train data
+print(X_train_s.round(2))
+# print the scaled test data
+print(X_test_s.round(2))`},
+{g:"sc",t:"Min-Max with a Custom Range",f:"products.csv",
+s:"A shopping site wants to show Price and Reviews on a simple scale from 0 to 10 for its ranking model.",
+k:"Scale the Price and Reviews columns using MinMaxScaler with feature_range=(0, 10) and print the result.",
+c:`Product_ID,Price,Reviews
+P1,499,120
+P2,1299,980
+P3,899,450
+P4,2499,2100
+P5,1599,760
+P6,699,300`,
+p:`# import pandas to read the csv file
+import pandas as pd
+# import MinMaxScaler from sklearn
+from sklearn.preprocessing import MinMaxScaler
+# read the csv file
+df = pd.read_csv("products.csv")
+# select the two columns to scale
+X = df[["Price", "Reviews"]]
+# create the scaler with range 0 to 10
+scaler = MinMaxScaler(feature_range=(0, 10))
+# scale the columns
+scaled = scaler.fit_transform(X)
+# put the result in a DataFrame
+out = pd.DataFrame(scaled, columns=X.columns)
+# print the result rounded to 2 decimals
+print(out.round(2))`}
+];
+const n={enc:0,sc:0};
+A.forEach(a=>{
+ const i=++n[a.g],box=document.createElement("div");box.className="box";
+ const rows=a.c.split("\n").map(r=>r.split(","));
+ const tbl="<table><tr>"+rows[0].map(h=>"<th>"+h+"</th>").join("")+"</tr>"+rows.slice(1).map(r=>"<tr>"+r.map(v=>"<td>"+v+"</td>").join("")+"</tr>").join("")+"</table>";
+ box.innerHTML=`<span class="tag">${a.g=="enc"?"Encoding":"Scaling"} ${i}</span><h3>${a.t}</h3><p><b>Scenario:</b> ${a.s}</p><div class="task"><b>Task:</b> ${a.k}</div><p><b>Dataset:</b> ${a.f}</p>${tbl}<button class="dl">Download CSV</button><button class="alt sol">Show Solution</button><pre></pre>`;
+ const pre=box.querySelector("pre");pre.textContent=a.p;
+ const sb=box.querySelector(".sol");sb.onclick=()=>{pre.classList.toggle("show");sb.textContent=pre.classList.contains("show")?"Hide Solution":"Show Solution"};
+ const db=box.querySelector(".dl");
+ db.onclick=async()=>{
+  try{const d=window.claude&&await claude.use("downloads");
+   if(d){await d.save({filename:a.f,data:a.c+"\n"});return}
+   await navigator.clipboard.writeText(a.c+"\n");db.textContent="CSV copied. Paste it in a file named "+a.f;
+  }catch(e){}
+ };
+ document.getElementById(a.g+"List").appendChild(box);
+});
+</script></body></html>
